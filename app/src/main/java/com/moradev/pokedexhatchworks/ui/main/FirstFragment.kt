@@ -53,14 +53,13 @@ class FirstFragment : Fragment() {
     }
 
     private fun init() {
-
         setUpView()
         setUpEvents()
         setUpObservables()
         callPokemonService()
-
-
     }
+
+
 
     private fun setUpView() {
         mAdapter = PokeAdapter {
@@ -93,6 +92,8 @@ class FirstFragment : Fragment() {
         requireContext().showLoading{ progressDialog = it }
         mainViewModel.getPokemonList(offset, limit)
     }
+
+
 
     private fun showList(list:List<Pokemon>) {
         if(binding.rvList.adapter == null) {

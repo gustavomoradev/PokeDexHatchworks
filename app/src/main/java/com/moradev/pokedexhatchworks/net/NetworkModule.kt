@@ -18,16 +18,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    val url = "https://pokeapi.co/"
+    val urlPoKe = "https://pokeapi.co/"
+    val urlExchange = "https://currency-exchange.p.rapidapi.com"
+
     val TIMEOUT = 30L
 
     @Singleton
     @Provides
-    fun providesPokeApi(okHttpClient: OkHttpClient, gson: Gson):PokeApi{
+    fun providesPokeApi(okHttpClient: OkHttpClient, gson: Gson): PokeApi {
 
 
         return Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl(urlPoKe)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build().create(PokeApi::class.java)
@@ -35,12 +37,22 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun providesExchangeApi(okHttpClient: OkHttpClient, gson: Gson): ExchangeApi {
+        return Retrofit.Builder()
+            .baseUrl(urlExchange)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build().create(ExchangeApi::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun providesOkHttpClient(
-        logginInterceptor:HttpLoggingInterceptor
-    ):OkHttpClient{
+        logginInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
 
 
-        val builder:OkHttpClient.Builder = OkHttpClient.Builder()
+        val builder: OkHttpClient.Builder = OkHttpClient.Builder()
             .connectionSpecs(listOf(ConnectionSpec.MODERN_TLS))
             .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
 //            .certificatePinner()
@@ -53,13 +65,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideLogginInterceptor():HttpLoggingInterceptor{
+    fun provideLogginInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
     @Singleton
     @Provides
-    fun provideGson():Gson{
+    fun provideGson(): Gson {
         return GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
     }
 

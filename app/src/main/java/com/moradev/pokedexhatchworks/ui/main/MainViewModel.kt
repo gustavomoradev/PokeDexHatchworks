@@ -17,6 +17,11 @@ import javax.inject.Inject
 class MainViewModel
 @Inject constructor(private var mainRepo: MainRepository):ViewModel() {
 
+    val exchangeResponse: LiveData<String>
+        get() = _exchangeResponse
+    private var _exchangeResponse = MutableLiveData<String>()
+
+
     val pokemonResponse: LiveData<PokemonResponse>
         get() = _pokemonResponse
     private var _pokemonResponse = MutableLiveData<PokemonResponse>()
@@ -37,6 +42,12 @@ class MainViewModel
     fun getPokemonSelectedDetails(pokemonName: String){
         viewModelScope.launch (Dispatchers.Main){
             _pokemonDetailsResponse.value = mainRepo.getPokemonByName(pokemonName)
+        }
+    }
+
+    fun getExchange(from:String="USD", to:String="CRC"){
+        viewModelScope.launch(Dispatchers.Main) {
+            _exchangeResponse.value = mainRepo.getExchange(from, to)
         }
     }
 

@@ -71,8 +71,8 @@ class SecondFragment : Fragment() {
 
         mainViewModel.pokemonDetailsResponse.observe(viewLifecycleOwner){pokeDetails ->
             if(pokeDetails!=null) {
-                "${pokeDetails.height}m".also { binding.txvHeight.text = it }
-                "${pokeDetails.weight}kg".also { binding.txvWeight.text = it }
+                "${pokeDetails.height}in".also { binding.txvHeight.text = it }
+                "${pokeDetails.weight}lb".also { binding.txvWeight.text = it }
 
                 var chip:Chip
                 pokeDetails.types.forEach {slot ->

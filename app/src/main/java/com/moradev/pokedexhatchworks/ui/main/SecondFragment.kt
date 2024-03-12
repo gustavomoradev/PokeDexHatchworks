@@ -71,8 +71,8 @@ class SecondFragment : Fragment() {
 
         mainViewModel.pokemonDetailsResponse.observe(viewLifecycleOwner){pokeDetails ->
             if(pokeDetails!=null) {
-                "${pokeDetails.height}kg".also { binding.txvHeight.text = it }
-                "${pokeDetails.weight}m".also { binding.txvWeight.text = it }
+                "${pokeDetails.height}m".also { binding.txvHeight.text = it }
+                "${pokeDetails.weight}kg".also { binding.txvWeight.text = it }
 
                 var chip:Chip
                 pokeDetails.types.forEach {slot ->
@@ -93,7 +93,7 @@ class SecondFragment : Fragment() {
                     Glide.with(requireContext())
                         .asBitmap()
                         .load(Uri.parse(image))
-                        .error(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_round_arrow_forward))
+                        .error(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_block))
 
                         .listener(object : RequestListener<Bitmap> {
                             override fun onLoadFailed(

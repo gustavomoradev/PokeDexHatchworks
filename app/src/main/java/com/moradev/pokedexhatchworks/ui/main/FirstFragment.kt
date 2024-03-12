@@ -1,5 +1,7 @@
 package com.moradev.pokedexhatchworks.ui.main
 
+import android.app.ProgressDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,11 +32,9 @@ class FirstFragment : Fragment() {
     private var offset:Int = 0
     private var limit:Int = 20
     private lateinit var mAdapter:PokeAdapter
+    private var progressDialog: ProgressDialog? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
@@ -42,21 +42,33 @@ class FirstFragment : Fragment() {
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun init() {
 
-        mainViewModel.pokemonResponse.observe(viewLifecycleOwner) {
-            if (it != null) {
-                savePokemonList(it.results)
-                showList(mainViewModel.pokemonList)
-            }
-        }
+        setUpView()
+        setUpEvents()
+        setUpObservables()
+        callPokemonService()
 
-        mainViewModel.getPokemonList(offset, limit)
 
+    }
+
+    private fun setUpView() {
         mAdapter = PokeAdapter {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundleOf("pokemonSelected" to it.name))
         }
+    }
 
+    private fun setUpEvents() {
         binding.rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -65,7 +77,21 @@ class FirstFragment : Fragment() {
                 }
             }
         })
+    }
 
+    private fun setUpObservables() {
+        mainViewModel.pokemonResponse.observe(viewLifecycleOwner) {
+            if (it != null) {
+                progressDialog?.dismiss()
+                savePokemonList(it.results)
+                showList(mainViewModel.pokemonList)
+            }
+        }
+    }
+
+    private fun callPokemonService() {
+        requireContext().showLoading{ progressDialog = it }
+        mainViewModel.getPokemonList(offset, limit)
     }
 
     private fun showList(list:List<Pokemon>) {
@@ -74,9 +100,7 @@ class FirstFragment : Fragment() {
             mAdapter.submitList(list)
         }else {
             mAdapter.notifyItemInserted(mainViewModel.pokemonList.size)
-
         }
-
     }
 
     private fun addMorePokemon() {
@@ -94,13 +118,10 @@ class FirstFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+}
+
+fun Context.showLoading(msg:String = "Loading, please wait...", dismiss:(ProgressDialog) ->Unit ){
+    val progress = ProgressDialog.show(this, "", msg)
+    dismiss(progress)
 }

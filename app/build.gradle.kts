@@ -60,13 +60,14 @@ dependencies {
 
     implementation("com.airbnb.android:lottie:6.4.0")
     implementation("androidx.palette:palette-ktx:1.0.0")
-    implementation("io.coil-kt:coil:2.6.0")
+//    implementation("io.coil-kt:coil:2.6.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
 
     //di
     implementation("com.google.dagger:hilt-android:2.48")
 
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     kapt(    "com.google.dagger:hilt-android-compiler:2.48")
 

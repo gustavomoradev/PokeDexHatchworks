@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "135383465999",
+    "project_id": "pokedex-hatchwork",
+    "storage_bucket": "pokedex-hatchwork.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135383465999:android:591b41a3b7b9b7965e637a",
+        "android_client_info": {
+          "package_name": "com.moradev.pokedexhatchworks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm1T2rfgTW4w38sC7VeEK2u5eCzMpBC6Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

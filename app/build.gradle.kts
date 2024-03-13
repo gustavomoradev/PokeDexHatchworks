@@ -1,8 +1,12 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -17,6 +21,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+//        buildConfigField("String", "API_KEY","\"${System.getenv("api.key")}\"")
+//        buildConfigField("String", "API_HOST","\"${System.getenv("api.host")}\"")
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("project.properties").inputStream())
+        buildConfigField("String", "API_KEY","\"${properties.getProperty("api.key")}\"")
+        buildConfigField("String", "API_HOST","\"${properties.getProperty("api.host")}\"")
     }
 
     buildTypes {
@@ -39,6 +51,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
+    android.buildFeatures.buildConfig = true
 
 //    testOptions {
 //        unitTests {
@@ -67,6 +80,10 @@ dependencies {
 
     //di
     implementation("com.google.dagger:hilt-android:2.48")
+
+    //firebase
+    implementation("com.google.firebase:firebase-crashlytics:18.6.2")
+    implementation("com.google.firebase:firebase-analytics:21.5.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")

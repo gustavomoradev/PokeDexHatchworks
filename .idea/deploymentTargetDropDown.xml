@@ -5,6 +5,21 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="onCreateView()">
+        <State />
+      </entry>
+      <entry key="recyclerViewShoewed()">
+        <State />
+      </entry>
+      <entry key="recyclerViewShowed()">
+        <State />
+      </entry>
+      <entry key="testEventFragment()">
+        <State />
+      </entry>
+      <entry key="testFoo()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

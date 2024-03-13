@@ -29,8 +29,8 @@ class FirstFragment : Fragment() {
     private val binding get() = _binding!!
     private val mainViewModel:MainViewModel by viewModels()
 
-    private var offset:Int = 0
-    private var limit:Int = 20
+     var offset:Int = 0
+     var limit:Int = 20
     private lateinit var mAdapter:PokeAdapter
     private var progressDialog: ProgressDialog? = null
 
@@ -104,12 +104,12 @@ class FirstFragment : Fragment() {
         }
     }
 
-    private fun addMorePokemon() {
+     fun addMorePokemon() {
         offset+=20
         mainViewModel.getPokemonList(offset, limit)
     }
 
-    private fun savePokemonList(results: ArrayList<Pokemon>?) {
+    fun savePokemonList(results: ArrayList<Pokemon>?) {
         if (!results.isNullOrEmpty()){
             mainViewModel.pokemonList.addAll(results)
             val mutableList = arrayListOf<Pokemon>()

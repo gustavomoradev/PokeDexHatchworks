@@ -11,6 +11,8 @@ import com.moradev.pokedexhatchworks.remote.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.annotations.TestOnly
+import org.jetbrains.annotations.VisibleForTesting
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,6 +51,19 @@ class MainViewModel
         viewModelScope.launch(Dispatchers.Main) {
             _exchangeResponse.value = mainRepo.getExchange(from, to)
         }
+    }
+
+
+    @TestOnly
+    @VisibleForTesting
+    fun mockPokemonResponseTest(pokemonList: ArrayList<Pokemon>){
+        _pokemonResponse.value = PokemonResponse(2, "", "", pokemonList)
+    }
+
+    @TestOnly
+    @VisibleForTesting
+    fun mockExchangeResponseTest(value:String){
+        _exchangeResponse.value = "value"
     }
 
 }

@@ -1,77 +1,72 @@
 package com.moradev.pokedexhatchworks.ui.main
 
-import com.moradev.pokedexhatchworks.data.Cries
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.moradev.pokedexhatchworks.data.Pokemon
-import com.moradev.pokedexhatchworks.data.PokemonDetailsResponse
-import com.moradev.pokedexhatchworks.data.PokemonResponse
-import com.moradev.pokedexhatchworks.net.PokeApi
 import com.moradev.pokedexhatchworks.remote.MainRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
-
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
 
     @RelaxedMockK
     private lateinit var mainRepository: MainRepository
+    @RelaxedMockK
+    private lateinit var pokemonList:ArrayList<Pokemon>
 
-    lateinit var mainViewModel: MainViewModel
+    private lateinit var mainViewModel:MainViewModel
 
+    @get:Rule
+    var rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
     @Before
     fun onBefore(){
         MockKAnnotations.init(this)
         mainViewModel = MainViewModel(mainRepository)
+        Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
-
-    @Test
-    fun verifyPokemonDetailWasCalledAlmostOneTime() = runBlocking {
-        coEvery { mainRepository.getPokemonByName("any") } returns PokemonDetailsResponse(Cries("",""), 0, 0, "", arrayListOf(),0)
-
-        mainRepository.getPokemonByName("")
-
-        coVerify (exactly = 0){ mainRepository.getPokemonList() }
-        coVerify (exactly = 1){ mainRepository.getPokemonByName("") }
+    @After
+    fun onAfter(){
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun verifyPokemonListWasCalled()= runBlocking {
+    fun `when viewmodel has pokemon`() = runTest {
 
-        val mockResponse = PokemonResponse(results = arrayListOf(Pokemon("Pikachu","")))
+        coEvery { mainViewModel.getPokemonList(0,20) }
+        mainViewModel.mockPokemonResponseTest(pokemonList)
+        mainViewModel.pokemonResponse.value?.results?.isNotEmpty()?.let { assert(it) }
 
-        coEvery { mainRepository.getPokemonList() } returns mockResponse
+    }
 
-        val response = mainRepository.getPokemonList()
+    @Test
+    fun `when exchange Has Not Any String at Response`() = runTest {
+        coEvery { mainViewModel.getExchange() }
 
-        coVerify (exactly = 1){ mainRepository.getPokemonList() }
-        coVerify (exactly = 0){ mainRepository.getPokemonByName("") }
+        assert(mainViewModel.exchangeResponse.value.isNullOrEmpty())
 
-        assert(response == mockResponse)
+    }
+
+    @Test
+    fun `when exchange has some String at response`() = runTest {
+        coEvery { mainViewModel.getExchange() }
+
+        mainViewModel.mockExchangeResponseTest("anyValue")
+
+        mainViewModel.exchangeResponse.value?.isNotEmpty()?.let { assert(it) }
+
     }
 
 
-    /*@org.junit.jupiter.api.Test
-    fun getPokemonResponse() {
-    }
 
-    @org.junit.jupiter.api.Test
-    fun getPokemonDetailsResponse() {
-    }
-
-    @org.junit.jupiter.api.Test
-    fun getPokemonList() {
-    }
-
-    @org.junit.jupiter.api.Test
-    fun testGetPokemonList() {
-    }
-
-    @org.junit.jupiter.api.Test
-    fun getPokemonSelectedDetails() {
-    }*/
 }

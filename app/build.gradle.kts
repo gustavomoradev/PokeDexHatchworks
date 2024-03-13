@@ -1,3 +1,4 @@
+import com.android.build.gradle.tasks.detectAnnotationProcessors
 import java.util.Properties
 
 plugins {
@@ -20,7 +21,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.moradev.pokedexhatchworks.CustomTestRunner"
 
 //        buildConfigField("String", "API_KEY","\"${System.getenv("api.key")}\"")
 //        buildConfigField("String", "API_HOST","\"${System.getenv("api.host")}\"")
@@ -46,6 +48,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+
     }
     buildFeatures {
         dataBinding = true
@@ -53,11 +56,8 @@ android {
     }
     android.buildFeatures.buildConfig = true
 
-//    testOptions {
-//        unitTests {
-//            isIncludeAndroidResources = true
-//        }
-//    }
+
+
 
 
 }
@@ -84,10 +84,16 @@ dependencies {
     //firebase
     implementation("com.google.firebase:firebase-crashlytics:18.6.2")
     implementation("com.google.firebase:firebase-analytics:21.5.1")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     kapt(    "com.google.dagger:hilt-android-compiler:2.48")
+
+    // For instrumentation tests
+    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.51")
+    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.51")
+    kaptAndroidTest( "com.google.dagger:hilt-android-compiler:2.51")
 
 
 
@@ -106,17 +112,25 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
+    //lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     //Test
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
 
     testImplementation("io.mockk:mockk:1.13.10")
 //    testImplementation("io.mockk.mockk:1.12.2")
 
+//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0' //Ya estaba, la hemos actualizado.
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 
-
+    testImplementation("androidx.fragment:fragment-ktx:1.6.2")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.2")
 
 
 }
